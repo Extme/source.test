@@ -36,14 +36,20 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
+//        'reCaptcha' => [
+//            'name' => 'reCaptcha',
+//            'class' => 'himiklab\yii2\recaptcha\ReCaptcha',
+//            'siteKey' => '6LdeJZoUAAAAAHzImLVwGRX3tb4Fi0sg9Isfdrvs',
+//            'secret' => '6LdeJZoUAAAAAE9r7h6R1v1EjK-3JY-qWoUPjoMh',
+//        ],
+
+//        'urlManager' => [
+//            'enablePrettyUrl' => true,
+//            'showScriptName' => false,
+//            'enableStrictParsing' => false,
+//            'rules' => [
+//            ],
+//        ],
     ],
     'params' => $params,
 ];

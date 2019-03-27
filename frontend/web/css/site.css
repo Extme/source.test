@@ -21,6 +21,10 @@ body {
     padding-top: 20px;
 }
 
+.form-control{
+    margin: 10px;
+}
+
 .jumbotron {
     text-align: center;
     background-color: transparent;

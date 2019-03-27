@@ -8,10 +8,12 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use frontend\models\TestModel;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use linslin\yii2\curl;
 
 /**
  * Site controller
@@ -60,7 +62,7 @@ class SiteController extends Controller
             ],
             'captcha' => [
                 'class' => 'yii\captcha\CaptchaAction',
-                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+                'fixedVerifyCode' => null,
             ],
         ];
     }
@@ -70,9 +72,39 @@ class SiteController extends Controller
      *
      * @return mixed
      */
+
+    public function generateTree(){
+
+        $countOfNodes = rand(100, 500);
+
+        $tree = [];
+
+        for($x = 0; $x < $countOfNodes; $x++ ){
+            $tree[$x] = [];
+            $countOfBranches = rand(1, 5);
+            for($y = 0; $y < $countOfBranches; $y++ ) {
+                $tree[$x][$y] = [];
+                $countOfLeaves = rand(1, 5);
+                for($z = 0; $z < $countOfLeaves; $z++ ) {
+                    $tree[$x][$y][$z] = 'node_'.$x.' branch_'.$y;
+                }
+            }
+        }
+
+        return $tree;
+
+    }
+
+
     public function actionIndex()
     {
-        return $this->render('index');
+
+        $tree = $this->generateTree();
+        
+        return $this->render('index', [
+            'tree' => $tree,
+        ]);
+
     }
 
     /**
@@ -80,22 +112,33 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogin()
+    public function actionApi()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            $model->password = '';
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
+        $link = "https://giphy.p.rapidapi.com/v1/gifs/random?tag=random&api_key=dc6zaTOxFJmzC";
+
+        $curl = new curl\Curl();
+
+        $options = [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array('Content-Type: application/json',
+                'X-RapidAPI-Key: f87b490bf5msha1b09c21f5a9affp1c894ajsndb5e47b80bc0'),
+        ];
+
+        $response = $curl->setOptions($options)
+            ->get($link);
+
+        $response = json_decode($response);
+        $imageUrl = $response->data->images->fixed_height->url;
+
+
+        return [
+            'success' => true,
+            'data' => $imageUrl
+        ];
+
     }
 
     /**
@@ -110,28 +153,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
-        }
-    }
 
     /**
      * Displays about page.
