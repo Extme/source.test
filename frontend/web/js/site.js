@@ -23,6 +23,7 @@ $().ready(function () {
 
     $('.js-modal-show').click(function() {
         $('#testmodel-verifycode-image').click();
+        $('#testmodel-verifycode').val('');
         $('#test-image-js').attr('src', '#');
         $('#test-image-js').hide();
         $('#test-form-js').show();

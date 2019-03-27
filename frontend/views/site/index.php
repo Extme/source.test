@@ -25,5 +25,6 @@ $model = new TestModel();
             </li><br/>
         <?php } ?>
     </ul>
-<?php } echo $this->render('modal') ?>
+<?php }
+echo $this->render('modal') ?>
 
