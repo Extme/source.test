@@ -1,12 +1,9 @@
 <?php
-use yii\helpers\Html;
-use yii\bootstrap\Modal;
-use frontend\models\TestModel;
 
 /* @var $this yii\web\View */
 
 $this->title = 'My Yii Application';
-$model = new TestModel();
+
 
 ?>
 
